@@ -1,0 +1,12 @@
+{
+  "name": "sudoku02100",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Kid-first offline Sudoku PWA — 100 puzzles, Socratic coach, reusable game platform.",
+  "scripts": {
+    "test": "node --test tests/",
+    "lint": "node --check",
+    "serve": "npx http-server . -p 8080 -c-1"
+  }
+}
