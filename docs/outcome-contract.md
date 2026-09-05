@@ -1,6 +1,6 @@
 # Outcome Contract - Sudoku02100
 
-**Status:** proven
+Status: proven
 **Branch:** main
 **Created:** 2026-09-05
 
@@ -16,6 +16,7 @@ platform layer usable by future games, not just Sudoku.
 `puzzles_solved` reaches **100** in the on-device progress ledger, with difficulty
 strictly non-decreasing across puzzles, and the app is **installable + fully offline**
 (service worker + manifest) and reachable at a free public URL.
+- Metric: puzzles_solved=100 in on-device ledger (difficulty non-decreasing; installable+offline+live URL).
 
 ## Key Results (falsifiable)
 - **KR1:** Deterministic generator produces 100 unique puzzles; puzzles 1–55 (Intro→Medium)
