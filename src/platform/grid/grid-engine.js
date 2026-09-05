@@ -1,9 +1,9 @@
-// platform/grid/grid-engine.js — generic N×N puzzle grid. Game-agnostic.
+// platform/grid/grid-engine.js — generic N×N logic grid. Game-agnostic.
 //
-// The Sudoku rules are expressed as "groups": each cell belongs to one or more
-// groups, and each symbol may appear at most once per group. Sudoku gives us
-// 27 groups (9 rows + 9 columns + 9 boxes). Any other game just supplies its
-// own groups. This file contains zero Sudoku concepts.
+// The rules are expressed as "groups": each cell belongs to one or more
+// groups, and each symbol may appear at most once per group. A 9×9 game gives
+// us 27 groups (9 rows + 9 columns + 9 blocks). Any other game just supplies its
+// own groups. This file contains zero game-specific concepts.
 
 export class GridEngine {
   constructor({ size = 9, symbols = null, groups = null }) {

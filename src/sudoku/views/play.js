@@ -464,6 +464,7 @@ export function playView(nav, { index, tier } = {}) {
     window.removeEventListener('beforeunload', saveNow);
     saveNow();
     closeCoach();
+    closeModal();
   };
   return { el: root, title: isFree ? `${tierInfo.name} practice` : `Puzzle ${index}`, destroy };
 }

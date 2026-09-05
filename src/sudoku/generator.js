@@ -7,12 +7,12 @@ import { candidates } from './rules.js';
 import { solveWithSingles, findNakedSingles } from './strategies.js';
 
 export const TIERS = [
-  { id: 'intro', name: 'Baby Steps',   givens: 42, requireSingles: true,  from: 1,  to: 10, color: '#22C55E' },
-  { id: 'easy', name: 'Easy',          givens: 38, requireSingles: true,  from: 11, to: 30, color: '#3B82F6' },
-  { id: 'medium', name: 'Getting Good', givens: 35, requireSingles: true, from: 31, to: 45, color: '#F59E0B' },
-  { id: 'hard', name: 'Hard',          givens: 32, requireSingles: true,  from: 46, to: 65, color: '#EC4899' },
-  { id: 'tough', name: 'Tough',        givens: 29, requireSingles: false, from: 66, to: 85, color: '#8B5CF6' },
-  { id: 'expert', name: 'Expert',      givens: 26, requireSingles: false, from: 86, to: 100, color: '#E11D48' },
+  { id: 'intro', name: 'Baby Steps',   givens: 42, requireSingles: true,  from: 1,  to: 10, color: '#15803D' },
+  { id: 'easy', name: 'Easy',          givens: 38, requireSingles: true,  from: 11, to: 30, color: '#1D4ED8' },
+  { id: 'medium', name: 'Getting Good', givens: 35, requireSingles: true, from: 31, to: 45, color: '#B45309' },
+  { id: 'hard', name: 'Hard',          givens: 32, requireSingles: true,  from: 46, to: 65, color: '#BE123C' },
+  { id: 'tough', name: 'Tough',        givens: 29, requireSingles: false, from: 66, to: 85, color: '#6D28D9' },
+  { id: 'expert', name: 'Expert',      givens: 26, requireSingles: false, from: 86, to: 100, color: '#9F1239' },
 ];
 
 export function getTier(puzzleIndex /* 1-based */) {

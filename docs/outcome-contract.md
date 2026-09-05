@@ -1,6 +1,6 @@
 # Outcome Contract — Sudoku02100
 
-**Status:** active
+**Status:** proven
 **Branch:** main
 **Created:** 2026-09-05
 
@@ -81,3 +81,39 @@ Numbers are taught as symbols with dot-counters. "Row", "column", "box" are defi
 pictures before use. Every strategy name has a kid-name ("The One-Space Trick",
 "Only One Fits", "Number Hunting"). Coach prose ≤ ~8 words/sentence. Blacklist words the
 kid can't know: "candidate", "unique", "constraint", "cell coordinate".
+
+## Assumptions (falsify these)
+- A 7–10yo non-reader can tap answers on a big button and follow a 2-word question.
+- Coached "ask-then-guide" (never answer-dump) is teachable via the 4-level hint pipeline.
+- Difficulty follows givens (42→26); ramp proof = naked+hidden singles solve 1–55.
+- A per-device salt + deterministic seed gives stable 100-puzzle journey per device.
+- Free hosting (GitHub Pages) with service worker is a sufficient distribution channel.
+
+## Evidence required for "done"
+1. `node --test "tests/*.test.mjs"` → 35 pass (generator determinism + uniqueness, tier
+   ramp singles-proof, coach ordering, platform import-boundary).
+2. `node tools/smoke-imports.mjs` → 27/27.
+3. Grep `(?i)box|candidate|puzzle|sudoku` in `src/platform/**` → 0 matches (KR3 letter true).
+4. Browser (local + live URL): sound toggle; learn quiz grades right/wrong; coached click
+   flow places the hinted cell; full solve → win modal → record persisted → puzzle 2 unlocks;
+   offline reload renders board; SW `sudoku2100-v5` precaches 36 assets; 0 console errors.
+
+## Command evidence
+```
+$ node --test "tests/*.test.mjs"            → exit:0 (35 pass, generation 2.5s)
+$ node tools/smoke-imports.mjs              → exit:0 (27 modules, 0 failed)
+$ node tools/contrast-check.mjs             → exit:0 (AA pairs ≥4.5:1, verified 2026-09-05)
+$ curl -sI https://youtextme.github.io/Sudoku02100/ → HTTP 200
+$ Invoke-WebRequest …/sw.js → contains CACHE_VERSION 'sudoku2100-v5'; ASSETS lists 36 files
+$ Browser offline reload (127.0.0.1:4179, SW-controlled, cache 'sudoku2100-v5'):
+  81 gridcells + 9-key keypad + a digit placed with zero network → offline works
+$ Browser full solve → modal "Puzzle Done!" ★★★ → ledger records puzzle-1
+  {stars:3, hintsUsed:0, timeMs, solvedAt} → #/play/2 unlocked → 0 console errors
+```
+Bar-raiser: baseline table (5 rows incl. "do nothing") + PoC commit `9347297` + A/B
+stating why one design (ask-then-guide) survived. Design tokens: `css/tokens.css`
+(palette 9 hexes, type scale, radius, shadow) + signature rocket-avatar + AI-slop
+checklist (no purple-default, no gradients, no rounded-2xl-everywhere, no fake
+testimonials). Independent evaluation: `docs/evidence-Sudoku02100.md` (Evaluator,
+fresh context, 2026-09-05; 5 findings remediated: quiz grading, modal leak,
+platform vocab, contrast, contract sections).

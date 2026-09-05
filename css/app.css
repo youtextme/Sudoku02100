@@ -514,7 +514,7 @@
 .map-cell.solved {
   background: var(--green);
   border-color: #18a249;
-  color: #fff;
+  color: var(--navy);
 }
 
 .map-cell.current {

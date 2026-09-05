@@ -104,11 +104,16 @@ export function learnLessonView(nav, lessonId) {
     p.options.forEach((label, i) => {
       const b = h('button', { class: 'quiz-opt', onClick: () => {
         if (b.dataset.state) return;
-        play('correct');
-        toast('Right answer!', 'green');
-        b.dataset.state = 'right';
-        card.appendChild(h('p', { class: 'muted', style: { fontWeight: '800', marginTop: '10px' } }, p.after));
-        navRow();
+        const correct = i === p.correct;
+        play(correct ? 'correct' : 'nudge');
+        b.dataset.state = correct ? 'right' : 'wrong';
+        if (correct) {
+          toast('Right answer!', 'green');
+          card.appendChild(h('p', { class: 'muted', style: { fontWeight: '800', marginTop: '10px' } }, p.after));
+          navRow();
+        } else {
+          toast('Not quite — try again!', 'orange');
+        }
       } }, label);
       opts.appendChild(b);
     });
