@@ -1,0 +1,76 @@
+# Child-UX Rules — Sudoku02100 Kid-Simple Redesign
+
+Research deliverable for `docs/outcome-contract-kid-simple.md` (slice s1).
+Role: Researcher / child-UX. No product code was changed; this file is the brief the Builder implements against.
+Target user: one real 7-10-year-old, non-reader / low-reader, easily overwhelmed by the current build.
+Date: 2026-09-05.
+
+## Verification legend
+
+- **[fetched]** — I opened the page and confirmed the quote verbatim during this run.
+- **[searched]** — authoritative source whose key text is quoted in search snippets; URL is real but not re-fetched line-by-line.
+
+## 1. Sourced child-UX rules
+
+| # | Child-UX rule | Why it matters (1 line, cited) | Source URL | Maps to THIS app (specific change) |
+|---|---|---|---|---|
+| 1 | Non-readers cannot use text — make the UI work with icons, sound, and minimal labels. | NN/G's table over 125 kids shows reading goes "not at all" (3-5) → "tentative" (6-8) → "scanning" (9-12); Google: "Avoid text-only buttons to support non-readers." [fetched] | https://www.nngroup.com/articles/childrens-websites-usability-issues/ · https://developers.google.com/building-for-kids/designing-engaging-apps | Replace word captions with dot-counter number buttons and icon-only actions on the board; ≤4-word captions max; audio announces every state; move the 40-word home copy out of the kid path. |
+| 2 | Tap is the native gesture — one tap must do one thing. | Sesame Workshop tablet best-practices: "Tap is the most intuitive and foundational touch interaction for children." [searched] | https://joanganzcooneycenter.org/wp-content/uploads/2020/02/SesameWorkshop-2012.pdf | Kill the two-step "select a square, then tap a number" tax: auto-select an empty cell so the very first tap places a digit; delete pencil/note mode from the kid board entirely. |
+| 3 | Touch targets must be big and isolated: ≥44px (Apple HIG 44pt / WCAG AAA 2.5.5 / NN/G ~1cm), Material says 48×48dp ≈ 9mm. | Material 3: "consider making touch targets at least 48 x 48dp… about 9mm regardless of screen size"; Google: "Create big touch targets" for kids' developing motor skills. [fetched] | https://m3.material.io/foundations/designing/structure · https://www.w3.org/TR/WCAG21/ (SC 2.5.5) · https://developer.apple.com/design/human-interface-guidelines/accessibility · https://developers.google.com/building-for-kids/designing-engaging-apps | Audit every kid-target: board cells, keypad buttons ≥44-48px with ≥8px spacing. If a 9×9 board cannot give 81 cells ≥44px on the kid's device, that is evidence for a 4×4 warm-up track (see Disprove below). |
+| 4 | Every touch must produce instant feedback via sound + visual together. | Google: "Be clear after an action… use a combination of sound, visuals, and text"; Sesame: "Children expect immediate feedback from their touch. Sound effects are an effective way to communicate input registration." [fetched for Google, searched for Sesame] | https://developers.google.com/building-for-kids/designing-engaging-apps · https://joanganzcooneycenter.org/wp-content/uploads/2020/02/SesameWorkshop-2012.pdf | Instant star burst + correct-chime on every correctly placed digit; wrong digit → soft shake + red pulse on the conflicting cell (see rule 9), never silence. |
+| 5 | Rewards/payoffs for correct answers sustain motivation — they are the dopamine of early learning. | Sesame: "Correct Answers: Payoffs are very important to children. They keep them motivated and invested… include sound effects… also a visual payoff via animation." [searched] | https://joanganzcooneycenter.org/wp-content/uploads/2020/02/SesameWorkshop-2012.pdf | Per-digit star (not just end-of-puzzle) + sound + confetti burst each correct placement; keep the end-of-puzzle celebration but make it one big action (see P1). |
+| 6 | Children's working memory is smaller than adults' — design to cut cognitive load. | NN/G research: kids' "working memory capacity is even smaller than that of adults, so it is crucial to pay attention to how much information your users need to carry around" (Sweller's CLT applied to kids). [fetched] | https://www.nngroup.com/articles/kids-cognition/ · https://www.sciencedirect.com/topics/psychology/cognitive-load-theory | Board-as-the-whole-app: no modes, no menus, no modal chain; one visible goal (fill the board); hide timer, fill-meter, puzzle number, and coach text from the kid screen so the only "thing to hold" is the sudoku. |
+| 7 | State the goal and how to reach it clearly at the start — kids cannot infer objectives. | NN/G: "Give kids clear and specific instructions by stating the goal of a game and how to achieve it" (Mission PAW example; Starfall counter-example where 5-year-olds played aimlessly). [fetched] | https://www.nngroup.com/articles/kids-cognition/ | First-launch inside the board: a 2-3s animated, text-free beat showing "1-9 in every row, box, and column" with glowing highlight, then auto-dismiss; no learn gate before it. |
+| 8 | Only essential sounds and visuals — clutter breaks early attention. | Google: "Avoid unnecessary distractions. Only use essential sounds and visuals. Younger kids have limited motor skills, focus, and patience. They may get frustrated or distracted." [fetched] | https://developers.google.com/building-for-kids/designing-engaging-apps | Delete the 6-card home dashboard (hero + next-puzzle + 100-cell map + learn + free + more) from the kid path — present a single PLAY door; hide coach button, timer, fill meter, and tier chip on the kid board. |
+| 9 | Error feedback must be encouraging and visual, not textual. | Google: "Create encouraging errors… allow the kid to get back into the experience quickly" and "use visual hints like arrows, highlights, or pulses… Avoid using text to point out errors since users under 5 typically can't read." [fetched] | https://developers.google.com/building-for-kids/designing-engaging-apps | Replace `showBlocked`'s text toast ("A 5 is already in this row. (Row 2, Col 3).") with a red pulse/shake on the offending cell + gentle sound, then auto-reselect the empty cell; zero error copy on the kid path. |
+| 10 | Separate the kid space from the parent space and gate adult features with an adult-only challenge. | Google: "Gate parental controls. Use a challenge or question that only an adult would know" — and NN/G notes "bury the links to service content for parents in places that children are unlikely to click." [fetched] | https://developers.google.com/building-for-kids/designing-engaging-apps · https://www.nngroup.com/articles/childrens-websites-usability-issues/ | learn / progress / settings / free practice / coach graduate behind an unmissable "Grown-ups" door that requires an adult gate (hold-hold or simple arithmetic), exactly per KR3; kid route tree = home → play → win. |
+| 11 | Age-targeting is fine-grained — a 7-year-old and a 10-year-old are different products. | NN/G: "there's no such thing as 'designing for children' defined as everybody aged 3-12… children reacted negatively to content… even one school grade below their own level." [fetched] | https://www.nngroup.com/articles/childrens-websites-usability-issues/ | Do not ship one blob for "7-10": dot-counts and 4×4 warm-up suit 7-8; plain digits and 9×9 suit 9-10. Offer the parent (in grown-ups space) a starting-size toggle — a one-time, parent-set option, never a kid-facing choice. |
+| 12 | Zero-decision activation: the first launch should start real play, not explain the app. | Onboarding research: activation-led apps must "reach a meaningful first action"; "if a screen doesn't help a user reach value or remove immediate confusion, it probably shouldn't be in first-run onboarding" — corroborated for kids by Google's "Be clear after an action" and Sesame's "Tap is… most intuitive". Hard per-screen drop-off stats are industry-secondary, not peer-reviewed. **[unverified] for the numeric claim** | https://nuxie.ai/blog/app-onboarding-screens [unverified stat] · https://developers.google.com/building-for-kids/designing-engaging-apps · https://joanganzcooneycenter.org/wp-content/uploads/2020/02/SesameWorkshop-2012.pdf | Cold open = board, one tap anywhere starts (KR1: ≤2 taps install→board). The contract's ~60s-to-puzzle-1 North Star is the honest test of this rule; if it holds, the rule is evidence-based for this kid. |
+
+**Rule set → contract check:** KR1 (zero-choice) ← rules 8, 12 · KR2 (board-as-app, dot buttons, instant star, ≤4-word captions) ← rules 1, 2, 3, 4, 5, 6, 9 · KR3 (grown-ups door) ← rule 10 · KR4 (sourced rules) ← this table · fine-grained age ← rule 11.
+
+## 2. Disprove the brief — honest risks the zero-choice / board-as-app hypothesis is WRONG
+
+1. **The overwhelm is the 9×9 board itself, not the chrome.** 81 cells + 9 numbers is a lot for a 7-year-old's visual field and working memory (rule 6). If the kid reaches the board in ≤2 taps and still freezes, removing the home screen will not have fixed anything — it just fails faster. Contract kill #1 already covers this; the cheapest oracle = time-to-first-correct-digit + abandonment within 90s on the new build.
+2. **Star-per-digit reward can be a gimmick that trains button-mashing, not logic.** Sesame's payoff doctrine (rule 5) is real, but it is designed for *correct* answers; if a wrong digit only shakes softly, a low-effort kid may tap randomly to farm stars and "complete" puzzles with zero strategy. Watch ledger quality (wrong-digit attempts rising after reward ships) as the disconfirming signal.
+3. **Hiding learn/progress/coach may strip the teaching value the parent actually bought.** The stale niche of this app vs. app-store sudoku is "coach teaches you to think." If the parent is the one who installs and hands over the device, and the grown-ups door hides the coach, the parent may see a toy — and stop allowing it. The parent is the unexamined gate in the North Star equation.
+4. **7yo vs 10yo differences may matter more than simplicity.** NN/G (rule 11) says one-school-grade drift gets rejected. A starry, low-text, 4×4-feeling design may read as "for babies" to the 10-year-old (NN/G: kids called train cartoons "for babies, maybe 4 or 5"). Simplicity is necessary but not sufficient.
+5. **Zero-reading may be unattainable for sudoku.** The core instruction ("1-9 in every row, column, box — no repeats") is uncapturable in pure icons for a non-reader; contract kill #3 says relax to "reads a few words" if the board cannot be played without reading. The first-launch animation (rule 7) is only a stopgap.
+
+**Kill-verdict: the single most-likely failure to watch is risk #1 — the 9×9 grid itself is the overwhelm, not the navigation.** Zero-choice redesign makes that failure faster and cheaper to see, which is exactly why it is still the right next step. Pre-register: if the new build gets the kid to the board and they still don't make a correct placement within ~90s, pivot to a 4×4 picture-track warm-up (parent-set) before touching any other hypothesis. Test the 4×4 track as a cheap parallel PoC so the A/B is ready, not built during the 7-day measurement window.
+
+## 3. Ranked simplification changes for the Builder (file-level, no code changed here)
+
+**P0 — blocking the North Star (unaided puzzle-1 + return within 24h):**
+
+- `src/app.js` — Make cold open resolve to the board, not the dashboard: if no grown-ups gate is unlocked (or always for the default kid profile), `render()` maps `''`/`home` → `play/1` (or next unsolved puzzle). Route `learn`, `free`, `progress`, `settings` only inside the parent branch. Kid route tree becomes `home→play→win` (KR3). Topbar already has no nav chips (`shared.js buildTopbar`), so removing routes from the kid branch is sufficient; no shell work needed.
+- `src/sudoku/views/home.js` — Collapse the 6-card dashboard (hero + nextCard + 100-cell miniMap + learn + free + more, ~40 words) to a single full-screen PLAY door (icon + one word, ≥44px). `miniMap()` may stay as a parent-only component. This is the biggest remove-flow win (rule 8).
+- `src/sudoku/views/play.js:27-29,479-493` — Remove `lockedView` from the kid path: the kid always lands on the next unsolved puzzle. No "Puzzle 2 is locked / finish puzzle 1 first" text in kid space (rule 8, 9). Locking logic stays for the parent/at-level gate only.
+- `src/sudoku/views/play.js` keypad — dot-counter number buttons: render `d` with `d` leading dots (visual count, rule 1), ≥44pt hit area — and **delete Pencil + note mode** and the Erase/Pencil toolbar from the kid route (rule 2, 6). Keep `Erase` as an icon-only, kid-visible undo (NN/G: kids use eraser metaphor even when undo exists).
+- `src/sudoku/views/play.js:121-174` — Replace the `showBlocked` text toast ("A 5 is already in this row…") with a red pulse/shake on the conflicting cell + soft sound; auto-select the empty cell after. Visual-error-only on the kid path (rule 9).
+- `src/sudoku/views/play.js` input flow — Auto-select an empty cell on mount so the first tap places a number; kill the "Tap a square first, then a number." toast path (rule 2, 12).
+- `src/sudoku/views/play.js:62` coachBtn — Hide the Coach button on the kid route (moves to grown-ups door, rule 10). Zero hint-tapping on the kid path.
+
+**P1 — polish that sustains first-morning return:**
+
+- `src/sudoku/views/play.js:189-200` — Win modal: single big "Next" primary (icon+word); replace the 3-button choice (Next / My map / Home) with one auto-advance that the parent can disable; keep big celebration + star count (rules 5, 12).
+- `src/sudoku/views/play.js:50-61` — Hide timer + fill-meter + tier chip on the kid board; show them only inside parent/at-level stats (rule 6, 8). `fmtTime`/timer code can stay for the parent view.
+- Per-digit instant reward hook: on `onGridInput` success (src/sudoku/views/play.js:147-151) fire star-burst + `sfx('place')` + confetti pulse before `saveNow()` (rule 4, 5).
+- Sound defaults ON for kid profile (kids don't discover mute — Google quote), persisted; keep the existing topbar sound toggle for the parent.
+- First-launch 2-3s animated, text-free goal beat (rule 7) that auto-dismisses; reuse existing `confetti`/`GridView` highlight primitives, no new assets needed.
+
+**P2 — hygiene / not on the kid critical path:**
+
+- Contrast recheck on dot-count numbers (existing `contrast-check.mjs` should still pass after dot layer).
+- Restyle parent dashboard (progress/settings/learn) as explicit grown-ups space with visible breadcrumb back to kid play — same routes, gated not deleted.
+- Start-size (4×4 vs 9×9) parent-set toggle to implement the rule-11 dual track and the risk-1 escape hatch — build the 4×4 generator/render path as the parallel PoC.
+- AT keyboard parity on the parent routes unaffected by kid-route simplification (e.g., `aria-label` on new dot buttons = "five").
+
+### Command evidence expected from Builder (s1 inheritance)
+```
+$ node --test "tests/*.test.mjs"   → exit:0   (no regression; KR5)
+$ node tools/smoke-imports.mjs      → exit:0
+$ node tools/contrast-check.mjs     → exit:0
+$ Playwright cold-open → board taps ≤ 2 → pass (KR1)
+$ kid route tree = home→play→win (grep of app.js branches) → pass (KR3)
+```
