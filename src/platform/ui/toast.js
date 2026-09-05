@@ -1,4 +1,4 @@
-// platform/ui/toast.js — transient status pills. Game-agnostic.
+// platform/ui/toast.js - transient status pills. Game-agnostic.
 
 import { h, clear } from './dom.js';
 

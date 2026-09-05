@@ -1,4 +1,4 @@
-// sudoku/views/progress.js — the milestone / journey map screen.
+// sudoku/views/progress.js - the milestone / journey map screen.
 
 import { h } from '../../platform/ui/dom.js';
 import { summarize, perGameState, allRecords } from '../../platform/progress.js';

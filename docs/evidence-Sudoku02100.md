@@ -1,9 +1,9 @@
-# Evidence — Sudoku02100 (independent evaluation)
+# Evidence - Sudoku02100 (independent evaluation)
 
 **Evaluator:** fresh-context reviewer (did NOT author the implementation; no product code modified)
 **Repo:** `C:\Users\youte\OneDrive\Documents\effortless\Sudoku02100`
 **Contract:** `docs/outcome-contract.md`
-**Verdict:** **not yet** — strong architecture and evidence, but (a) a confirmed logic bug in the Learn quiz, (b) KR3's advertised grep fails on its own words, and (c) WCAG-AA contrast failures on tier chips contradict the README claim. No kill criterion is hit; none of these are architectural.
+**Verdict:** **not yet** - strong architecture and evidence, but (a) a confirmed logic bug in the Learn quiz, (b) KR3's advertised grep fails on its own words, and (c) WCAG-AA contrast failures on tier chips contradict the README claim. No kill criterion is hit; none of these are architectural.
 
 **Date:** 2026-09-05
 
@@ -15,8 +15,8 @@
 |---|---------|--------|------|
 | 1 | `node --test "tests/*.test.mjs"` | 35 pass / 0 fail (incl. "gen <10s" 2565 ms, "puzzles 1–55 singles-solvable", "exactly one solution", "no banned words", determinism) | 0 |
 | 2 | `node tools/smoke-imports.mjs` | `imported 27 modules, 0 failed` | 0 |
-| 3 | grep `box\|candidate\|puzzle\|sudoku` in `src/platform` | 12 matches — see §4 KR3 flag | 1 (found) |
-| 4 | grep (imports) in `src/platform` for sudoku imports | 0 matches — platform never imports sudoku | clean |
+| 3 | grep `box\|candidate\|puzzle\|sudoku` in `src/platform` | 12 matches - see §4 KR3 flag | 1 (found) |
+| 4 | grep (imports) in `src/platform` for sudoku imports | 0 matches - platform never imports sudoku | clean |
 | 5 | `git log --all --oneline` / `remote -v` / `ls-files` | 3 commits; origin `https://github.com/youtextme/Sudoku02100.git`; tracked list has no `.env/.pem/.key` | 0 |
 | 6 | secret scan `git log -p --all` (`api[_-]?key|secret|password|bearer|ghp_|AIza|BEGIN PRIVATE`) | 0 hits | 0 |
 | 7 | `Invoke-WebRequest https://youtextme.github.io/Sudoku02100/` (+ sw.js, manifest) | 200; `CACHE_VERSION = 'sudoku2100-v5'`; valid manifest (standalone, icons, shortcuts) | 0 |
@@ -32,12 +32,12 @@
 - Kill criteria 1–4: none triggered. Gen 2565 ms < 10 s; 1–55 singles-solvable across 6 random salts; coach never prints the answer before a question is posed (plan order lesson→question→action→reveal, confirmed in code `src/sudoku/coach.js:137-246` and in browser); reveal reachable only after kid fails twice or skips the action step (`src/sudoku/views/play.js:333-351`).
 
 ### Bar-raiser
-- Baseline table: present with 4 rows incl. "Do nothing" (`docs/outcome-contract.md:54-60`), but **unsourced, qualitative** — no cited numbers. Partial.
-- PoC commit before UI: yes — `9347297 engine: … + 35 tests green` predates `37752a1 ui: …` (git log).
+- Baseline table: present with 4 rows incl. "Do nothing" (`docs/outcome-contract.md:54-60`), but **unsourced, qualitative** - no cited numbers. Partial.
+- PoC commit before UI: yes - `9347297 engine: … + 35 tests green` predates `37752a1 ui: …` (git log).
 - A/B commitment: contract does not state an A/B-only-one decision; riskiest assumption (ask-then-guide coach) is pre-registered with a cheap PoC instead. Acceptable but should be stated.
 
 ### UI quality / AI-slop
-- Design tokens: `css/tokens.css` — full palette hexes (`--paper #fff8ec`, `--ink #2b2440`, `--orange #ff6b35`, navy/gold/green accents), type scale 15–42 px, radii 12–24, shadows, font stack.
+- Design tokens: `css/tokens.css` - full palette hexes (`--paper #fff8ec`, `--ink #2b2440`, `--orange #ff6b35`, navy/gold/green accents), type scale 15–42 px, radii 12–24, shadows, font stack.
 - No `linear-gradient`/`radial-gradient`/`backdrop-filter` anywhere in `css/` (grep: 0). Purple `--purple #8b5cf6` is 1 of 12 accents (`tokens.css:15`), not the brand default (navy-ink + cream-paper + orange primary). No `rounded-2xl` uniform pill-ification (radii 12–28 varied by component). **Zero** fake testimonials / review / "trusted-by" strings in `src/`.
 - Custom identity: "Space Numbers" theme, rocket mascot SVG (`shared.js:9-17`), chunky `--font-num` digits. Not templated.
 - A11y skeleton is strong: keyboard grid (arrows + digits + Backspace/Delete, `grid-view.js:76-95`), `role=grid/gridcell` with readable labels (`grid-view.js:57-58`, `:170-176`), `:focus-visible` ring (`base.css:40-44`), `aria-pressed`/`aria-checked`/`aria-selected` states, `visually-hidden` utility, `role=timer`, tap targets ≥44 px.
@@ -49,30 +49,30 @@
 ## 3. Browser flows independently re-verified (MCP Playwright, `http://127.0.0.1:4179/`, real clicks on real buttons)
 1. Home renders; 100-cell map; sound + install buttons in topbar; **0 console errors across the whole session**.
 2. `#/play/1`: 42 givens (intro target 42), 39 empty cells; solver completes by singles. Full solve via 39 cell+keypad clicks (0 blocked) → win modal `★★★ Puzzle Done!` → ledger record `puzzle-1 {stars:3, hintsUsed:0}` → `Next puzzle →` opens `#/play/2` (unlocked, 33 givens rendered).
-3. Coach flow on `#/play/2`: lesson step "New trick! … spy on the row, column, box" + definition, then graded question (`Only 8 can fit…` / options 3·5·8); clicking a **wrong** option → toast "So close — keep thinking!" + "Try again! (1/2)". Answer not shown until after question/action.
+3. Coach flow on `#/play/2`: lesson step "New trick! … spy on the row, column, box" + definition, then graded question (`Only 8 can fit…` / options 3·5·8); clicking a **wrong** option → toast "So close - keep thinking!" + "Try again! (1/2)". Answer not shown until after question/action.
 4. Sound toggle in topbar flips label and persists `s2100.app.sound.muted` true/false.
 5. SW: 1 registration, controller active, cache `sudoku2100-v5`; **offline reload** renders 81 cells + keypad, progress survives.
 6. Live URL serves build (shared.js byte-identical, SW v5, manifest 200).
 
 ## 4. Confirmed findings (blockers to "proven")
 
-### F1 — Learn multiple-choice quiz cannot register a wrong answer (logic bug, verified) 
-`src/sudoku/views/learn.js:105-112`: the `quiz` handler unconditionally does `play('correct'); toast('Right answer!'); b.dataset.state = 'right'` and never reads the page's `correct` index. **Browser proof:** in lesson `numbers`, on "How many dots is the number 6?", clicking the wrong option **"three"** produced toast `Right answer!`, `data-state="right"`, and the "Six! You are counting like a champ." after-text. `box-quiz` grades correctly (`learn.js:130-138`), and the coach grades correctly — only this widget is broken. A learning product that tells a kid a wrong answer is right is a truth defect (NFR: "learning/health product — no self-graded 'it works'"; bar-raiser impossibility standard).
+### F1 - Learn multiple-choice quiz cannot register a wrong answer (logic bug, verified) 
+`src/sudoku/views/learn.js:105-112`: the `quiz` handler unconditionally does `play('correct'); toast('Right answer!'); b.dataset.state = 'right'` and never reads the page's `correct` index. **Browser proof:** in lesson `numbers`, on "How many dots is the number 6?", clicking the wrong option **"three"** produced toast `Right answer!`, `data-state="right"`, and the "Six! You are counting like a champ." after-text. `box-quiz` grades correctly (`learn.js:130-138`), and the coach grades correctly - only this widget is broken. A learning product that tells a kid a wrong answer is right is a truth defect (NFR: "learning/health product - no self-graded 'it works'"; bar-raiser impossibility standard).
 
-### F2 — KR3 letter-of-rule failure ("zero Sudoku concepts" grep does not hold)
+### F2 - KR3 letter-of-rule failure ("zero Sudoku concepts" grep does not hold)
 Contract KR3: *"`src/platform/**` contains zero Sudoku concepts (no box, no candidate, no puzzle)"* with evidence *"import-boundary grep"*. The builder's own grep returns **12 matches**:
-- `src/platform/grid/grid-engine.js:5` — comment contains "…9 rows + 9 columns + 9 **boxes**" (also line 6: "This file contains zero Sudoku concepts").
-- `src/platform/progress.js` — public API uses `puzzleKey`/`puzzleKeys` (lines 33, 44-45, 66, 73-74, 111-119).
-The **spirit is met**: platform never imports sudoku (0 import matches), `GridEngine` is generic N×N+groups+symbols, `progress` is keyed by `gameId`. But the advertised falsifiable grep is factually false on its own terms, and the repo's README repeats "★ GAME-AGNOSTIC LAYER (zero Sudoku terms)" (`README.md:35`). Either purge the strings (rename `puzzleKey`→`levelKey`, reword the comment) or amend the contract wording — the builder decides; I do not rewrite the contract.
+- `src/platform/grid/grid-engine.js:5` - comment contains "…9 rows + 9 columns + 9 **boxes**" (also line 6: "This file contains zero Sudoku concepts").
+- `src/platform/progress.js` - public API uses `puzzleKey`/`puzzleKeys` (lines 33, 44-45, 66, 73-74, 111-119).
+The **spirit is met**: platform never imports sudoku (0 import matches), `GridEngine` is generic N×N+groups+symbols, `progress` is keyed by `gameId`. But the advertised falsifiable grep is factually false on its own terms, and the repo's README repeats "★ GAME-AGNOSTIC LAYER (zero Sudoku terms)" (`README.md:35`). Either purge the strings (rename `puzzleKey`→`levelKey`, reword the comment) or amend the contract wording - the builder decides; I do not rewrite the contract.
 
-### F3 — WCAG-AA contrast fails on tier chips and muted small text (measured)
+### F3 - WCAG-AA contrast fails on tier chips and muted small text (measured)
 See §2. White text on `--gold`, `--green`, `--pink`, `--purple` chips is 2.15–4.23:1 at 13 px; `.muted` is 4.24:1. README's "high contrast (WCAG AA)" checklist is therefore not yet true.
 
-### F4 — Win modal survives route change
+### F4 - Win modal survives route change
 `playView`'s `destroy()` (`play.js:462-467`) closes the coach but not the modal; navigating via hash (§3 step 2 then `goto '#/play/2'`) left the modal overlay intercepting pointer events. `app.js:42-43` destroys views without closing modals. Minor but real interaction wart on the app's own router.
 
-### F5 — Design tension (not a blocker)
-With a per-install random salt the puzzle sequence differs per device — acceptable, but KR1's "proven" wording should note the enforcement is by-construction (generator keeps singles-solvability on every removal, `generator.js:104-131`), not by exhaustive test of the actual device salt. Also the `one-fits` question text embeds the value when `cands.length===1` ("Only 8 can fit this square — can you see why?") — reframed as a *why*-question, so the kid is still asked first, but it is the one spot where the coach comes closest to answering before asking. And opening the coach costs a star (`hintsUsed` must be 0 for ★★★), which weakly nudges a *learning* app's target away from the coach.
+### F5 - Design tension (not a blocker)
+With a per-install random salt the puzzle sequence differs per device - acceptable, but KR1's "proven" wording should note the enforcement is by-construction (generator keeps singles-solvability on every removal, `generator.js:104-131`), not by exhaustive test of the actual device salt. Also the `one-fits` question text embeds the value when `cands.length===1` ("Only 8 can fit this square - can you see why?") - reframed as a *why*-question, so the kid is still asked first, but it is the one spot where the coach comes closest to answering before asking. And opening the coach costs a star (`hintsUsed` must be 0 for ★★★), which weakly nudges a *learning* app's target away from the coach.
 
 ## 5. Verdict
 **not yet.** The engine, generator guarantees, coach pipeline, PWA/offline, and progress ledger are real and verified (this is a strong `proven` candidate). Remediation before re-evaluation is bounded:

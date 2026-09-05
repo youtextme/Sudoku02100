@@ -1,4 +1,4 @@
-// sudoku/curriculum.js — what a zero-knowledge kid is taught, when, and how.
+// sudoku/curriculum.js - what a zero-knowledge kid is taught, when, and how.
 // All kid-facing copy lives here (or in the view files), short sentences,
 // no unexplained words.
 
@@ -34,7 +34,7 @@ export const celebrate = {
     'Yay! You beat this puzzle.',
   ],
   correct: ['Yes!', 'Perfect!', 'Right!', 'Good thinking!', 'Super!'],
-  keepGoing: ['Keep going, you got this!', 'So close — keep thinking!', 'Almost! Try once more.', 'Another look — you can do it.'],
+  keepGoing: ['Keep going, you got this!', 'So close - keep thinking!', 'Almost! Try once more.', 'Another look - you can do it.'],
 };
 
 // Long-term "Days" mirror: which puzzle a kid should do after finishing `solvedCount`.
@@ -65,7 +65,7 @@ export const LESSONS = [
         q: 'Which number comes after 9?',
         options: ['1', '10', '0'],
         correct: 1,
-        after: 'Yes — after 9 we start over at 10, but Sudoku only uses 1 to 9!',
+        after: 'Yes - after 9 we start over at 10, but Sudoku only uses 1 to 9!',
       },
     ],
   },

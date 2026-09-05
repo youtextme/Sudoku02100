@@ -1,4 +1,4 @@
-// sudoku/strategies.js — the ONLY two techniques the kid is taught:
+// sudoku/strategies.js - the ONLY two techniques the kid is taught:
 //   1. "Only One Fits"  (naked single: a cell with exactly one possible number)
 //   2. "Number Hunting" (hidden single: a number that fits in only one cell
 //                        of a row / column / box)

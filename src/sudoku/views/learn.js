@@ -1,4 +1,4 @@
-// sudoku/views/learn.js — the "knows nothing" curriculum.
+// sudoku/views/learn.js - the "knows nothing" curriculum.
 // Teaches numbers, lines, rules, and the three thinking tricks with demos.
 
 import { h, clear } from '../../platform/ui/dom.js';
@@ -112,7 +112,7 @@ export function learnLessonView(nav, lessonId) {
           card.appendChild(h('p', { class: 'muted', style: { fontWeight: '800', marginTop: '10px' } }, p.after));
           navRow();
         } else {
-          toast('Not quite — try again!', 'orange');
+          toast('Not quite - try again!', 'orange');
         }
       } }, label);
       opts.appendChild(b);
@@ -136,7 +136,7 @@ export function learnLessonView(nav, lessonId) {
         if (b.dataset.state) return;
         const correct = okVal === p.ok;
         play(correct ? 'correct' : 'nudge');
-        toast(correct ? 'Right!' : 'Almost — remember: no repeats inside a box!', correct ? 'green' : 'orange');
+        toast(correct ? 'Right!' : 'Almost - remember: no repeats inside a box!', correct ? 'green' : 'orange');
         b.dataset.state = correct ? 'right' : 'wrong';
         if (p.ok && !correct) card.appendChild(h('p', { class: 'muted', style: { fontWeight: '800', marginTop: '10px' } }, 'Every number appears once. This box is fine.'));
         if (!p.ok && correct) card.appendChild(h('p', { class: 'muted', style: { fontWeight: '800', marginTop: '10px' } }, 'A number is in twice. That is the problem.'));
@@ -181,7 +181,7 @@ export function learnLessonView(nav, lessonId) {
     const need = { 'one-space': 'one-space', 'one-fits': 'one-fits', hunt: 'number-hunt' }[lesson.id];
     const demo = need ? demoPuzzleFor(need) : null;
     if (!demo) {
-      return h('p', { class: 'muted', style: { fontWeight: '700' } }, 'Demo is warming up — go straight to your puzzle instead!');
+      return h('p', { class: 'muted', style: { fontWeight: '700' } }, 'Demo is warming up - go straight to your puzzle instead!');
     }
     const host = h('div', { class: 'board-wrap' });
     const eng = new GridEngine({ size: 9, groups: GROUPS });

@@ -1,4 +1,4 @@
-// platform/ui/modal.js — accessible modal shell. Game-agnostic.
+// platform/ui/modal.js - accessible modal shell. Game-agnostic.
 
 import { h, clear } from './dom.js';
 

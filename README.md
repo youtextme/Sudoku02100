@@ -2,7 +2,7 @@
 
 A 100% client-side PWA that teaches a kid (who knows **nothing**) Sudoku through 100
 puzzles of rising difficulty over up to 100 days, with a Socratic **Coach** that asks
-questions and guides how to *think* — never just reveals the answer.
+questions and guides how to *think* - never just reveals the answer.
 
 - **No backend.** All puzzles, progress, coaching, and persistence live in the browser.
 - **Installable + offline** (PWA manifest + service worker).

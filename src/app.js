@@ -1,4 +1,4 @@
-// app.js — boot: router, shell wiring, PWA. The single entry point.
+// app.js - boot: router, shell wiring, PWA. The single entry point.
 
 import { clear, scrollTop } from './platform/ui/dom.js';
 import { buildTopbar } from './sudoku/views/shared.js';

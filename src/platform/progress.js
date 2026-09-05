@@ -1,4 +1,4 @@
-// platform/progress.js — game-agnostic progress ledger.
+// platform/progress.js - game-agnostic progress ledger.
 // Any game can record completions, stars, hints used, streaks and badges
 // without the game itself knowing anything about it.
 

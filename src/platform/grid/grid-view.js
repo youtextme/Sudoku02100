@@ -1,4 +1,4 @@
-// platform/grid/grid-view.js — DOM rendering + input for a GridEngine.
+// platform/grid/grid-view.js - DOM rendering + input for a GridEngine.
 // Game-agnostic. Uses CSS vars (--grid-size) set by the theme.
 
 import { h, clear } from '../ui/dom.js';

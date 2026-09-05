@@ -1,4 +1,4 @@
-// platform/store.js — namespaced persistence. Game-agnostic.
+// platform/store.js - namespaced persistence. Game-agnostic.
 // Backed by localStorage when available; falls back to in-memory so the app
 // still works in private / storage-blocked browsers.
 

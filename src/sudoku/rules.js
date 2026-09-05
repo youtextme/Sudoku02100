@@ -1,4 +1,4 @@
-// sudoku/rules.js — Sudoku-specific group math and candidate logic.
+// sudoku/rules.js - Sudoku-specific group math and candidate logic.
 // board = Array(81), 0 = empty, 1..9 = value.
 
 export const SIZE = 9;

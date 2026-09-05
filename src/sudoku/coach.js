@@ -1,4 +1,4 @@
-// sudoku/coach.js — thinks like a patient helper for a kid.
+// sudoku/coach.js - thinks like a patient helper for a kid.
 // Picks the single best next move and builds a scripted teaching plan with
 // escalating questions. The plan is DATA (pure, testable); the view walks it.
 
@@ -128,11 +128,11 @@ function filledUnits(board, cell) {
 /**
  * Build a runnable teaching script from a move.
  * step.kind:
- *   lesson   — info + region to highlight
- *   question — (a) multiple choice: options[] with .label + correct number
+ *   lesson   - info + region to highlight
+ *   question - (a) multiple choice: options[] with .label + correct number
  *              (b) gridpick: mode='gridpick', the kid taps the board
- *   action   — the kid makes the move themselves
- *   reveal   — last resort (contains the answer, only after kid tried)
+ *   action   - the kid makes the move themselves
+ *   reveal   - last resort (contains the answer, only after kid tried)
  */
 export function planForMove(move, board) {
   if (!move) return makeStuckPlan();
@@ -190,7 +190,7 @@ export function planForMove(move, board) {
       kind: 'question',
       text:
         cands.length === 1
-          ? `Only ${move.value} can fit this square — the others are used nearby. Can you see why?`
+          ? `Only ${move.value} can fit this square - the others are used nearby. Can you see why?`
           : `Which one number CAN fit this square? The others are used in this row, column, or box.`,
       options: pickOptions(move.value, nearbyPool(board, ctx, move.value)),
       correct: move.value,
@@ -261,7 +261,7 @@ export function makeStuckPlan() {
   }];
 }
 
-/** possible-numbers (pencil notes) for all empty squares — a teaching aid */
+/** possible-numbers (pencil notes) for all empty squares - a teaching aid */
 export function noteSuggestions(board) {
   const out = new Array(81).fill(null).map(() => []);
   for (let c = 0; c < 81; c++) if (board[c] === 0) out[c] = candidates(board, c);

@@ -1,4 +1,4 @@
-// platform/ui/dom.js — minimal DOM helpers. Game-agnostic.
+// platform/ui/dom.js - minimal DOM helpers. Game-agnostic.
 // Always textContent for text (never innerHTML with user data).
 
 export function h(tag, props = {}, ...children) {

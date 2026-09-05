@@ -1,4 +1,4 @@
-// platform/sound.js — dependency-free WebAudio chimes. Game-agnostic.
+// platform/sound.js - dependency-free WebAudio chimes. Game-agnostic.
 // No audio files: everything is synthesized. Safe defaults: muted=false,
 // but audio only ever starts after a user gesture.
 

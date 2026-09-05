@@ -1,4 +1,4 @@
-// sudoku/views/home.js — landing page: hero, next puzzle, way-finding.
+// sudoku/views/home.js - landing page: hero, next puzzle, way-finding.
 
 import { h } from '../../platform/ui/dom.js';
 import { summarize } from '../../platform/progress.js';

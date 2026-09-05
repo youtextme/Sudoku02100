@@ -1,4 +1,4 @@
-// sudoku/views/shared.js — shared UI bits for the Sudoku app: rocket mascot,
+// sudoku/views/shared.js - shared UI bits for the Sudoku app: rocket mascot,
 // top bar, tier chips. (Reuses platform ui helpers.)
 
 import { h } from '../../platform/ui/dom.js';

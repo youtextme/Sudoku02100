@@ -1,4 +1,4 @@
-// sudoku/views/free.js — free-practice tier picker.
+// sudoku/views/free.js - free-practice tier picker.
 
 import { h } from '../../platform/ui/dom.js';
 import { TIERS } from '../generator.js';

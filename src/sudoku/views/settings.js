@@ -1,4 +1,4 @@
-// sudoku/views/settings.js — sound, install, data, and a tiny parent guide.
+// sudoku/views/settings.js - sound, install, data, and a tiny parent guide.
 
 import { h } from '../../platform/ui/dom.js';
 import { isMuted, setMuted } from '../../platform/sound.js';

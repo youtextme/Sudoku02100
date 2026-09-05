@@ -1,4 +1,4 @@
-// sudoku/views/play.js — the game screen: board, keypad, coach, win flow.
+// sudoku/views/play.js - the game screen: board, keypad, coach, win flow.
 
 import { h, clear, qs } from '../../platform/ui/dom.js';
 import { GridEngine } from '../../platform/grid/grid-engine.js';
@@ -488,6 +488,6 @@ function lockedView(nav, index, records) {
   root.appendChild(h('div', { class: 'two-col', style: { marginTop: '14px' } },
     h('button', { class: 'btn btn-ghost', onClick: () => nav('progress') }, 'My map'),
     h('button', { class: 'btn btn-primary', onClick: () => nav(prevSolved ? `play/${index}` : `play/${prev}`) },
-      prevSolved ? 'I finished it — go!' : `Play puzzle ${prev}`)));
+      prevSolved ? 'I finished it - go!' : `Play puzzle ${prev}`)));
   return { el: root, title: `Puzzle ${index}` };
 }

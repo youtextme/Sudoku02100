@@ -1,4 +1,4 @@
-# Outcome Contract — Sudoku02100
+# Outcome Contract - Sudoku02100
 
 **Status:** proven
 **Branch:** main
@@ -8,7 +8,7 @@
 A 7–10 year-old with **zero knowledge** (no Sudoku, no grid logic, no strategy concepts;
 reads only simple English) can install the app on her Android phone and, over up to 100
 days, solve **100 puzzles that ramp in difficulty**, each time being *taught how to think*
-by a Socratic hint mode — not just handed the answer. The app is 100% client-side
+by a Socratic hint mode - not just handed the answer. The app is 100% client-side
 (no backend, no network needed after install) and its reusable game-parts live in a
 platform layer usable by future games, not just Sudoku.
 
@@ -64,14 +64,14 @@ non-reader-ish kid. Cheap test: strategy tests + a 4-step coached flow in Playwr
 If a kid cannot be *asked a question* about the next move, the coach architecture changes.
 
 ## Verification plan (slice-gated)
-- s1/s2: `node --test tests/` — engine, generator, strategies, coach rankings.
+- s1/s2: `node --test tests/` - engine, generator, strategies, coach rankings.
 - s3: `node --test tests/strategies.test.mjs` + Playwright smoke: load index.html locally,
   no console errors, open coach, complete a coached move, place a number, win small puzzle.
 - s4: manifest + SW registration assertions; offline reload test (browser context offline).
 - s5: `https://youtextme.github.io/Sudoku02100/` loads, SW installs, manifest valid
   (curl + Playwright on live URL).
 - Independent Evaluator (fresh context) reviews contract + artifact; flags kill/security/metric issues.
-- Final gate: `evidence-check` style — command receipts + live behavior + metric movement.
+- Final gate: `evidence-check` style - command receipts + live behavior + metric movement.
 
 ## Compute & autonomy
 All client-side. Build tooling: node --test. No paid services. Hosting: GitHub Pages (free).

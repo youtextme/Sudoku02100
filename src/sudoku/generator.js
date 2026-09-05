@@ -1,4 +1,4 @@
-// sudoku/generator.js — deterministic, strategy-graded Sudoku puzzles.
+// sudoku/generator.js - deterministic, strategy-graded Sudoku puzzles.
 // Every puzzle is seeded from (index + per-device salt), so the same kid always
 // sees the same 100 puzzles in the same order, generated entirely on-device.
 

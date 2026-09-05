@@ -1,4 +1,4 @@
-// Sudoku02100 service worker — offline-first cache.
+// Sudoku02100 service worker - offline-first cache.
 // Update CACHE_VERSION to force a refresh of the app shell.
 
 const CACHE_VERSION = 'sudoku2100-v5';

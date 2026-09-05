@@ -1,4 +1,4 @@
-// sudoku/saves.js — per-install persistence for the Sudoku game.
+// sudoku/saves.js - per-install persistence for the Sudoku game.
 // Salt + generated puzzles + live solve-state all live locally, never on a server.
 
 import { scopedStore } from '../platform/store.js';

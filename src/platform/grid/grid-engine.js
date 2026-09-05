@@ -1,4 +1,4 @@
-// platform/grid/grid-engine.js — generic N×N logic grid. Game-agnostic.
+// platform/grid/grid-engine.js - generic N×N logic grid. Game-agnostic.
 //
 // The rules are expressed as "groups": each cell belongs to one or more
 // groups, and each symbol may appear at most once per group. A 9×9 game gives

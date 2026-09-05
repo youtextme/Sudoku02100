@@ -1,4 +1,4 @@
-// platform/ui/confetti.js — dependency-free confetti burst. Game-agnostic.
+// platform/ui/confetti.js - dependency-free confetti burst. Game-agnostic.
 
 import { h } from './dom.js';
 

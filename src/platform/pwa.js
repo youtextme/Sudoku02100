@@ -1,4 +1,4 @@
-// platform/pwa.js — install prompt + online/offline status + cache update.
+// platform/pwa.js - install prompt + online/offline status + cache update.
 // Game-agnostic. Safe to call even without a service worker present.
 
 import { on } from './events.js';

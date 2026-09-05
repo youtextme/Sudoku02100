@@ -1,4 +1,4 @@
-// platform/events.js — tiny pub/sub. Game-agnostic.
+// platform/events.js - tiny pub/sub. Game-agnostic.
 
 const registry = new Map(); // topic -> Set<handler>
 

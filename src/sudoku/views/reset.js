@@ -1,4 +1,4 @@
-// sudoku/views/reset.js — destructive "start over" helper.
+// sudoku/views/reset.js - destructive "start over" helper.
 
 import { clearNamespace } from '../../platform/store.js';
 

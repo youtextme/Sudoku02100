@@ -1,4 +1,4 @@
-// platform/util.js — tiny dependency-free utilities (game-agnostic)
+// platform/util.js - tiny dependency-free utilities (game-agnostic)
 // Everything here must work in both Node (tests) and the browser (app).
 
 export function clamp(v, lo, hi) {
@@ -29,7 +29,7 @@ export function randomSeed() {
   return (t ^ _seedCounter) >>> 0;
 }
 
-// 32-bit FNV-1a hash of a string — stable across platforms.
+// 32-bit FNV-1a hash of a string - stable across platforms.
 export function hashString(str) {
   let h = 0x811c9dc5;
   for (let i = 0; i < str.length; i++) {
