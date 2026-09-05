@@ -13,6 +13,8 @@ function makeBackend() {
   } catch {
     const mem = new Map();
     return {
+      get length() { return mem.size; },
+      key: (i) => { const keys = [...mem.keys()]; return keys[i] ?? null; },
       getItem: (k) => (mem.has(k) ? mem.get(k) : null),
       setItem: (k, v) => mem.set(k, String(v)),
       removeItem: (k) => mem.delete(k),
@@ -51,3 +53,24 @@ export function scopedStore(namespace) {
 }
 
 export const appStore = scopedStore('app');
+
+/** wipe every key in a namespace (used by "start over") */
+export function clearNamespace(namespace) {
+  const prefix = `${PREFIX}${namespace}.`;
+  const doomed = [];
+  for (let i = 0; i < backend.length; i++) {
+    const k = backend.key(i);
+    if (k && k.startsWith(prefix)) doomed.push(k);
+  }
+  for (const k of doomed) backend.removeItem(k);
+}
+
+/** wipe the entire app store (all namespaces) */
+export function clearAllStore() {
+  const doomed = [];
+  for (let i = 0; i < backend.length; i++) {
+    const k = backend.key(i);
+    if (k && k.startsWith(PREFIX)) doomed.push(k);
+  }
+  for (const k of doomed) backend.removeItem(k);
+}

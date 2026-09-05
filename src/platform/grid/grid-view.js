@@ -23,6 +23,7 @@ export class GridView {
       role: 'grid',
       'aria-label': 'Game board',
       tabindex: '0',
+      dataset: { size: this.engine.size || 9 },
     });
     const size = Math.round(this.engine.size) || 9;
     this.root.style.setProperty('--board-n', size);
@@ -118,8 +119,8 @@ export class GridView {
   update() {
     const eng = this.engine;
     const sel = this.selected;
+    const noteMode = this.noteGetter ? this.noteGetter() : false;
     const highlightGroup = this.highlightCell >= 0 ? eng.cellGroups[this.highlightCell] : [];
-    const selGroups = sel >= 0 ? eng.cellGroups[sel] : [];
     const selValue = sel >= 0 ? eng.valueAt(sel) : -1;
 
     for (let cell = 0; cell < eng.n; cell++) {
@@ -128,18 +129,26 @@ export class GridView {
       const given = eng.isGiven(cell);
       const notes = eng.notesAt(cell);
 
+      // band border classes derived from grid geometry (works for any N×N)
+      const S = Math.round(Math.sqrt(eng.size)) || 3;
+      const br = eng.rowOf(cell), bc = eng.colOf(cell);
+      const cls = ['gcell'];
+      cls.push(bc % S === 0 ? 'cband-l' : '', bc + 1 === eng.size || (bc + 1) % S === 0 ? 'cband-r' : '');
+      cls.push(br % S === 0 ? 'cband-t' : '', br + 1 === eng.size || (br + 1) % S === 0 ? 'cband-b' : '');
+
       btn.textContent = '';
-      const noteMode = this.noteGetter ? this.noteGetter() : false;
       if (v >= 0) {
         btn.textContent = String(v);
       } else if (notes.length && noteMode) {
-        // small notes grid: 9 mini slots for a 9-symbol board
-        for (let s = 1; s <= eng.size; s++) {
-          if (notes.includes(s)) btn.appendChild(h('span', { class: 'gnote', 'aria-hidden': 'true' }, String(s)));
+        // small notes grid: mini slots for each symbol
+        cls.push('in-notes');
+        for (const s of notes) {
+          const n = h('span', { class: 'gnote', 'aria-hidden': 'true' }, String(s));
+          n.style.setProperty('--ncols', S);
+          btn.appendChild(n);
         }
       }
 
-      const cls = ['gcell'];
       if (given) cls.push('given');
       if (!given && v >= 0) cls.push('placed');
       if (this.hintCells.has(cell)) {

@@ -16,7 +16,7 @@ function applyProps(node, props) {
     } else if (key === 'dataset' && typeof value === 'object') {
       Object.assign(node.dataset, value);
     } else if (key.startsWith('on') && typeof value === 'function') {
-      node.addEventListener(key.slice(2), value);
+      node.addEventListener(key.slice(2).toLowerCase(), value);
     } else if (value != null && value !== false) {
       if (value === true) node.setAttribute(key, '');
       else node.setAttribute(key, String(value));

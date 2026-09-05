@@ -1,0 +1,22 @@
+{
+  "name": "Sudoku02100 — 100 Sudoku Puzzles for Kids",
+  "short_name": "Sudoku 02100",
+  "description": "A kid-first Sudoku app: 100 puzzles that get harder, a Coach that asks questions and teaches you to think, fully offline.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFF8EC",
+  "theme_color": "#1E2A5A",
+  "lang": "en",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ],
+  "shortcuts": [
+    { "name": "Today's puzzle", "short_name": "Today", "url": "./#/play/1", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Learn", "url": "./#/learn" }
+  ]
+}

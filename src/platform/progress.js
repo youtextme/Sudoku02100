@@ -31,7 +31,16 @@ function game(gameId) {
 }
 
 export function markSolved(gameId, puzzleKey, { stars = 1, hintsUsed = 0, timeMs = 0, day = null } = {}) {
-  const g = game(gameId);
+  const r = root();
+  if (!r.games[gameId]) {
+    r.games[gameId] = {
+      records: {},
+      badges: {},
+      bestStreak: 0,
+      lastSolvedDay: null,
+    };
+  }
+  const g = r.games[gameId];
   const prev = g.records[puzzleKey];
   g.records[puzzleKey] = {
     stars: Math.max(stars, prev ? prev.stars : 0),
@@ -53,8 +62,8 @@ export function markSolved(gameId, puzzleKey, { stars = 1, hintsUsed = 0, timeMs
     g.lastSolvedDay = todayKey;
     g.bestStreak = Math.max(g.bestStreak, current);
   }
-  save(root());
-  return getRecord(gameId, puzzleKey);
+  save(r);
+  return g.records[puzzleKey] || null;
 }
 
 function dayKeyOf(date) {
@@ -74,9 +83,18 @@ export function allRecords(gameId) {
 }
 
 export function grantBadge(gameId, badgeId) {
-  const g = game(gameId);
+  const r = root();
+  if (!r.games[gameId]) {
+    r.games[gameId] = {
+      records: {},
+      badges: {},
+      bestStreak: 0,
+      lastSolvedDay: null,
+    };
+  }
+  const g = r.games[gameId];
   g.badges[badgeId] = (g.badges[badgeId] || 0) + 1;
-  save(root());
+  save(r);
 }
 
 export function perGameState(gameId) {
@@ -92,8 +110,11 @@ export function perGameState(gameId) {
 // Generic stats row usable by any game's milestone screen.
 export function summarize(gameId, puzzleKeys) {
   const g = game(gameId);
-  const solved = Object.keys(g.records).length;
+  const solved = puzzleKeys.filter((k) => g.records[k]).length;
   const total = Math.max(puzzleKeys.length, 1);
-  const stars = Object.values(g.records).reduce((s, r) => s + r.stars, 0);
+  const stars = puzzleKeys
+    .map((k) => g.records[k] && g.records[k].stars)
+    .filter(Boolean)
+    .reduce((s, n) => s + n, 0);
   return { solved, total, stars, bestStreak: g.bestStreak, pct: (solved / total) * 100 };
 }
