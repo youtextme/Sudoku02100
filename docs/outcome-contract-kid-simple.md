@@ -54,7 +54,25 @@ The real kid completes puzzle 1 **unaided** (ledger `puzzle-1.hintsUsed === 0`, 
 $ node --test "tests/*.test.mjs"            → exit:0 (no regression)
 $ node tools/smoke-imports.mjs              → exit:0
 $ node tools/contrast-check.mjs             → exit:0
-$ Playwright: cold open → board taps ≤2      → pass
-$ ledger: puzzle-1 {hintsUsed:0, solvedAt} + session2 within 24h → gone live (real kid)
+$ Playwright: cold open → board taps ≤2      → pass (PLAY door = 1 tap, board rendered)
+$ Playwright: kid route tree home→play→win   → pass (win modal single "Next puzzle", 3 stars)
+$ Playwright: kids board audit               → pass (no coach/pencil/meta, dot keypad 1..9=45 dots, cells 52px, auto-select, red-pulse w/o toast, star reward)
+$ Playwright: parents gate                   → pass (wrong answer regenerates; correct swaps to hub; kid /learn blocked to PLAY door; unlocked /parents = hub)
+$ ledger: puzzle-1 {hintsUsed:0, solvedAt} + session2 within 24h → gone live (real kid)  [s4, pending]
 $
 ```
+
+## Slice status (s2/s3 done 2026-09-05, commit 4875411 on contract/kid-simple)
+- s2 Zero-choice launch + board-as-app: DONE.
+  - `src/app.js` - cold open renders PLAY door; journey play always resolves to the next unsolved puzzle (no lock walls on kid path); `learn`/`free`/`progress`/`settings` render only when `parentUnlocked()`; new `parents` route.
+  - `src/sudoku/views/home.js` - collapsed 6-card dashboard → single full-screen PLAY door (rocket + one giant word + puzzle number). `miniMap` export kept for `progress.js`.
+  - `src/sudoku/views/play.js` kids mode (`kids = !isFree`): meta tier/fill/timer and Coach button NOT rendered; Pencil removed; keypad = 1..9 with dot-counters; auto-selects first empty cell on mount; conflicts = red-pulse on offending cells + board shake (no text toast); every correct digit pops a rising ★; win modal = single big "Next puzzle" (2 taps to clear), non-dismissable.
+  - Fixed pre-existing bug: empty cells loaded as `0` and rendered as literal "0" on the board (saves 0-empty = engine -1-empty); the shipped board showed zeros. Auto-select also depended on the fix (`findIndex(v < 0)`).
+- s3 Parent space + instant reward: DONE.
+  - `src/sudoku/views/parents.js` (new): arithmetic-challenge gate (2..6 + 2..6, 3 options; wrong → regenerates; correct → swaps to hub in place even when hash already `#/parents`); hub links to learn/progress/settings/free + "→ Back to play".
+  - `src/sudoku/views/shared.js`: `buildTopbar(title, { nav })`; when `nav` present a Grown-ups lock door button renders in the topbar → `nav('parents')`. In-app "Add to Home Screen" note kept only on the PLAY door when not standalone.
+  - `src/platform/session.js` (new): `parentUnlocked()` / `setParentUnlocked()` on `sessionStorage['s2100.parent']`.
+  - `sw.js`: CACHE_VERSION `sudoku2100-v5` → `sudoku2100-v6`; ASSETS += `platform/session.js`, `views/parents.js` (38 files, none missing on disk).
+  - CSS: `.play-door*`, `.kp-dots/.kp-dot`, `.cell-star` + `star-pop`, `.gcell.tap-error` + `warn-pulse`, `.board-wrap.board-shake`, `.parents-*`.
+- Regression (KR5): 35/35 tests, smoke-imports 29 modules/0 fail, contrast 12/12, sw assets 38/38 exist.
+- Remaining: s4 (real kid on device, 7-day window, parent observation → North Star) and s5 (fresh Evaluator + evidence-check --done).
