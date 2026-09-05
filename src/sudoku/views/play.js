@@ -23,6 +23,7 @@ const PADLOCK_SVG = `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"
 
 export function playView(nav, { index, tier } = {}) {
   const isFree = !!tier;
+  const kids = !isFree; // journey play is the kid's route; free practice is a grown-ups tool
   const journeyRecords = allRecords(GAME_ID);
   if (!isFree && index > 1 && !journeyRecords[`puzzle-${index - 1}`]) {
     return lockedView(nav, index, journeyRecords);
@@ -35,7 +36,8 @@ export function playView(nav, { index, tier } = {}) {
   const engine = new GridEngine({ size: 9, groups: GROUPS });
   engine.reset(puzzle.given);
   for (let c = 0; c < 81; c++) {
-    engine.values[c] = saved.values[c] ?? puzzle.given[c];
+    const sv = saved.values[c] ?? puzzle.given[c];
+    engine.values[c] = sv > 0 ? sv : -1; // 0 means "empty" in saves; engine needs -1
     engine.notes[c] = new Set(saved.notes[c] || []);
   }
 
@@ -92,11 +94,68 @@ export function playView(nav, { index, tier } = {}) {
     return Array.from(engine.values, (v) => (v < 0 ? 0 : v));
   }
 
+  // ---- kid feedback (re-applied after every gridView.update()) ----
+  const starAt = new Map(); // cell -> expiresAt
+  const warnCells = new Set();
+  let warnUntil = 0;
+
+  function reapplyKidFeedback() {
+    const now = Date.now();
+    for (const [cell, until] of Array.from(starAt.entries())) {
+      const el = gridView.cells[cell];
+      if (!el) continue;
+      let span = el.querySelector('.cell-star');
+      if (until > now) {
+        if (!span) {
+          span = document.createElement('span');
+          span.className = 'cell-star';
+          span.setAttribute('aria-hidden', 'true');
+          span.textContent = '★';
+          el.appendChild(span);
+        }
+      } else if (span) {
+        span.remove();
+        starAt.delete(cell);
+      }
+    }
+    const warnActive = now < warnUntil;
+    for (let c = 0; c < gridView.cells.length; c++) {
+      const el = gridView.cells[c];
+      if (el) el.classList.toggle('tap-error', warnActive && warnCells.has(c));
+    }
+    if (warnActive) {
+      const board = qs('.board-wrap', root);
+      if (board) board.classList.add('board-shake');
+    }
+    if (starAt.size) setTimeout(reapplyKidFeedback, 80);
+  }
+
+  function popStar(cell) {
+    starAt.set(cell, Date.now() + 700);
+    reapplyKidFeedback();
+  }
+
+  function flashWarn(cells) {
+    warnCells.clear();
+    cells.forEach((c) => warnCells.add(c));
+    warnUntil = Date.now() + 600;
+    setTimeout(() => {
+      warnUntil = 0;
+      for (let c = 0; c < gridView.cells.length; c++) {
+        const el = gridView.cells[c];
+        if (el) el.classList.remove('tap-error');
+      }
+      const board = qs('.board-wrap', root);
+      if (board) board.classList.remove('board-shake');
+    }, 650);
+  }
+
   function refreshUI() {
     const done = engine.n - boardArray().filter((v) => v > 0).length;
     fill.style.width = `${Math.round(((engine.n - done) / engine.n) * 100)}%`;
     timeEl.textContent = fmtTime(timeMs);
     gridView.update();
+    if (kids) reapplyKidFeedback();
     if (!timerId && !won) startTimer();
   }
 
@@ -146,6 +205,7 @@ export function playView(nav, { index, tier } = {}) {
       }
       engine.values[cell] = symbolId;
       sfx('place');
+      if (kids) popStar(cell);
       saveNow();
       if (coachHint && coachHint.eatInput(cell, false, symbolId)) return true;
       return checkContinue();
@@ -159,6 +219,16 @@ export function playView(nav, { index, tier } = {}) {
   }
 
   function showBlocked(cell, symbolId) {
+    if (kids) {
+      const mates = [];
+      for (const gid of engine.cellGroups[cell]) {
+        const group = GROUPS[gid];
+        const buddy = group.find((c) => c !== cell && engine.values[c] === symbolId);
+        if (buddy != null) mates.push(buddy);
+      }
+      flashWarn([cell, ...mates]);
+      return;
+    }
     for (const gid of engine.cellGroups[cell]) {
       const group = GROUPS[gid];
       const mate = group.find((c) => c !== cell && engine.values[c] === symbolId);
@@ -188,16 +258,22 @@ export function playView(nav, { index, tier } = {}) {
     const msg = celebrate.solved[Math.floor(Math.random() * celebrate.solved.length)];
     let modalBody = h('div', { class: 'win-card' },
       h('div', { class: 'win-stars' }, '★'.repeat(stars)),
-      h('div', { class: 'win-title' }, 'Puzzle Done!'),
+      h('div', { class: 'win-title' }, kids ? 'You did it!' : 'Puzzle Done!'),
       h('div', { class: 'win-sub' }, msg),
     );
     const actions = [];
-    if (!isFree && index < 100) {
-      actions.push({ label: 'Next puzzle →', kind: 'primary', onClick: () => { closeModal(); nav(`play/${index + 1}`); } });
+    if (kids) {
+      // Kid path: the single loud next step is "play the next one".
+      const nextIdx = index < 100 ? index + 1 : 100;
+      actions.push({ label: 'Next puzzle', kind: 'primary', onClick: () => { closeModal(); nav(`play/${nextIdx}`); } });
+    } else {
+      if (!isFree && index < 100) {
+        actions.push({ label: 'Next puzzle →', kind: 'primary', onClick: () => { closeModal(); nav(`play/${index + 1}`); } });
+      }
+      actions.push({ label: isFree ? 'Practice again' : 'My map', kind: 'secondary', onClick: () => { closeModal(); nav(isFree ? 'free' : 'progress'); } });
+      actions.push({ label: 'Home', kind: 'ghost', onClick: () => { closeModal(); nav('home'); } });
     }
-    actions.push({ label: isFree ? 'Practice again' : 'My map', kind: 'secondary', onClick: () => { closeModal(); nav(isFree ? 'free' : 'progress'); } });
-    actions.push({ label: 'Home', kind: 'ghost', onClick: () => { closeModal(); nav('home'); } });
-    openModal({ title: 'Yay!', body: modalBody, actions, dismissable: true });
+    openModal({ title: kids ? 'Yay!' : 'Yay!', body: modalBody, actions, dismissable: !kids });
   }
 
   function grantMilestones(count) {
@@ -403,18 +479,22 @@ export function playView(nav, { index, tier } = {}) {
 
   // ---- build UI ----
   gridView.mount(boardEl);
-  root.appendChild(meta);
+  if (!kids) root.appendChild(meta);
   root.appendChild(boardEl);
-  root.appendChild(coachBtn);
+  if (!kids) root.appendChild(coachBtn);
 
   // keypad
   const kp = h('div', { class: 'keypad-grid' });
   for (let d = 1; d <= 9; d++) {
-    kp.appendChild(h('button', {
+    const btn = h('button', {
       class: 'kp-num',
+      'data-v': String(d),
       'aria-label': `Number ${d}`,
       onClick: () => { placeSelected(d); },
-    }, String(d)));
+    });
+    btn.appendChild(dotCounter(d));
+    btn.appendChild(h('span', { class: 'kp-digit', 'aria-hidden': 'true' }, String(d)));
+    kp.appendChild(btn);
   }
   keypadEl.appendChild(kp);
 
@@ -422,22 +502,46 @@ export function playView(nav, { index, tier } = {}) {
   const eraseBtn = h('button', {
     class: 'tool-btn', id: 'erase-btn', 'aria-label': 'Erase selected square',
     onClick: () => { clearSelected(); },
-  }, 'Erase');
+  }, kids ? '✕' : 'Erase');
   const noteBtn = h('button', {
     class: 'tool-btn', id: 'note-toggle', 'aria-pressed': 'false', 'aria-label': 'Toggle pencil notes',
     onClick: () => { toggleNotes(noteBtn); },
   }, 'Pencil');
   tools.appendChild(eraseBtn);
-  tools.appendChild(noteBtn);
+  if (!kids) tools.appendChild(noteBtn);
   keypadEl.appendChild(tools);
 
   root.appendChild(keypadEl);
 
+  // Kid path: no pencil, keypad is just 1..9 plus a dot counter under each digit.
+  if (kids) noteMode = false;
+
+  function dotCounter(d) {
+    const span = document.createElement('span');
+    span.className = 'kp-dots';
+    span.setAttribute('aria-hidden', 'true');
+    for (let i = 0; i < d; i++) {
+      const b = document.createElement('i');
+      b.className = 'kp-dot';
+      span.appendChild(b);
+    }
+    return span;
+  }
+
   function placeSelected(d) {
     if (gridView.selected < 0) {
-      gridView.select(0);
-      toast('Tap a square first, then a number.', 'info');
-      return;
+      if (kids) {
+        // Auto-jump to the first empty square so a number alone is enough.
+        const empty = engine.values.findIndex((v) => v < 0);
+        gridView.select(empty >= 0 ? empty : 0);
+      } else {
+        toast('Tap a square first, then a number.', 'info');
+        return;
+      }
+    }
+    if (kids && (engine.isGiven(gridView.selected) || engine.valueAt(gridView.selected) >= 0)) {
+      const empty = engine.values.findIndex((v) => v < 0);
+      if (empty >= 0) gridView.select(empty);
     }
     controller.onGridInput(gridView.selected, d, noteMode, false);
     refreshUI();
@@ -458,6 +562,11 @@ export function playView(nav, { index, tier } = {}) {
   }
 
   refreshUI();
+
+  if (kids) {
+    const firstEmpty = engine.values.findIndex((v) => v < 0);
+    if (firstEmpty >= 0) gridView.select(firstEmpty);
+  }
 
   const destroy = () => {
     stopTimer();

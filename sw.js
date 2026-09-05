@@ -1,7 +1,7 @@
 // Sudoku02100 service worker - offline-first cache.
 // Update CACHE_VERSION to force a refresh of the app shell.
 
-const CACHE_VERSION = 'sudoku2100-v5';
+const CACHE_VERSION = 'sudoku2100-v6';
 
 const ASSETS = [
   './',
@@ -19,6 +19,7 @@ const ASSETS = [
   './src/platform/grid/grid-view.js',
   './src/platform/progress.js',
   './src/platform/pwa.js',
+  './src/platform/session.js',
   './src/platform/sound.js',
   './src/platform/store.js',
   './src/platform/ui/confetti.js',
@@ -35,6 +36,7 @@ const ASSETS = [
   './src/sudoku/views/free.js',
   './src/sudoku/views/home.js',
   './src/sudoku/views/learn.js',
+  './src/sudoku/views/parents.js',
   './src/sudoku/views/play.js',
   './src/sudoku/views/progress.js',
   './src/sudoku/views/reset.js',

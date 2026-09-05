@@ -35,10 +35,13 @@ export function tierChip(tier) {
 const SPEAKER_ON = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16 9a4 4 0 010 6M18.5 6.5a8 8 0 010 11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
 const SPEAKER_OFF = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16 9l6 6M22 9l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
 
+const GROWNUPS_SVG = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2.5" fill="currentColor"/><path d="M8 10V7a4 4 0 118 0v3" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle cx="12" cy="15" r="1.6" fill="#1E2A5A"/></svg>`;
+
 let installBound = false;
 
-/** renders the fixed top bar (title + sound + install) */
-export function buildTopbar(title) {
+/** renders the fixed top bar (rocket + title + grown-ups door + sound + install) */
+export function buildTopbar(title, opts = {}) {
+  const { nav } = opts;
   const bar = document.getElementById('topbar');
   bar.hidden = false;
   const existing = bar.querySelectorAll('.topbar-fill, .tb-action, .tb-title');
@@ -47,6 +50,16 @@ export function buildTopbar(title) {
   bar.appendChild(rocketMark());
   const titleEl = h('span', { class: 'title tb-title' }, title);
   bar.appendChild(titleEl);
+
+  if (nav) {
+    const grownupsBtn = h('button', {
+      class: 'icon-btn tb-action tb-grownups',
+      'aria-label': 'Grown-ups door',
+      onClick: () => nav('parents'),
+    });
+    grownupsBtn.innerHTML = GROWNUPS_SVG;
+    bar.appendChild(grownupsBtn);
+  }
 
   const installBtn = h('button', {
     class: 'icon-btn tb-action',
